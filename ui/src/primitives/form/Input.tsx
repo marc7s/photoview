@@ -189,7 +189,8 @@ export const Button = ({
   <button
     className={tailwindClassNames(
       buttonStyles({ variant, background }),
-      className
+      className,
+      props.disabled === true && 'brightness-[0.7] cursor-not-allowed'
     )}
     {...props}
   >

@@ -1,0 +1,11 @@
+type AdvancedSearchResult {
+  "The string that was searched for"
+  query: String!
+  "A list of media that matched the query"
+  media: [Media!]!
+}
+
+extend type AdvancedQuery {
+  "Perform a search query on the contents of the media library"
+  search(query: String!, limitMedia: Int): AdvancedSearchResult!
+}

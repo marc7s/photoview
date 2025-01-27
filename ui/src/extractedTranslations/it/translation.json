@@ -121,6 +121,9 @@
   "routes": {
     "page_not_found": "Pagina non trovata"
   },
+  "search_page": {
+    "title": ""
+  },
   "settings": {
     "concurrent_workers": {
       "description": "Numero massimo di scansioni contemporanee",
@@ -146,6 +149,21 @@
       "description": "Verranno effettuate delle scansioni per tutti gli utenti alla ricerca di media nuovi o aggiornati",
       "scan_all_users": "Scansiona per tutti",
       "title": "Scansioni"
+    },
+    "thumbnails": {
+      "method": {
+        "description": "",
+        "filter": {
+          "box": "",
+          "catmull_rom": "",
+          "Lanczos": "",
+          "linear": "",
+          "mitchell_netravali": "",
+          "nearest_neighbor": ""
+        },
+        "label": ""
+      },
+      "title": ""
     },
     "user_preferences": {
       "change_language": {
@@ -254,14 +272,19 @@
     "download": {
       "filesize": {
         "byte_one": "",
+        "byte_many": "",
         "byte_other": "",
         "giga_byte_one": "",
+        "giga_byte_many": "",
         "giga_byte_other": "",
         "kilo_byte_one": "",
+        "kilo_byte_many": "",
         "kilo_byte_other": "",
         "mega_byte_one": "",
+        "mega_byte_many": "",
         "mega_byte_other": "",
         "tera_byte_one": "",
+        "tera_byte_many": "",
         "tera_byte_other": ""
       },
       "table_columns": {
@@ -278,6 +301,7 @@
     "media": {
       "album_path": "Percorso album",
       "exif": {
+        "description": "",
         "exposure_program": {
           "action_program": "Programma sport",
           "aperture_priority": "Priorità apertura",
@@ -341,6 +365,7 @@
     "people": "Persone",
     "photos": "Foto",
     "places": "Luoghi",
+    "search": "",
     "settings": "Impostazioni"
   },
   "timeline_filter": {

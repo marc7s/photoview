@@ -121,6 +121,9 @@
   "routes": {
     "page_not_found": "Страница не найдена"
   },
+  "search_page": {
+    "title": ""
+  },
   "settings": {
     "concurrent_workers": {
       "description": "Максимальное количество задач по сканированию разрешённых работать одновременно",
@@ -146,6 +149,21 @@
       "description": "Сканирование всех пользователей на наличие обновлённых или новых медиа",
       "scan_all_users": "Сканировать всех пользователей",
       "title": "Сканер"
+    },
+    "thumbnails": {
+      "method": {
+        "description": "",
+        "filter": {
+          "box": "",
+          "catmull_rom": "",
+          "Lanczos": "",
+          "linear": "",
+          "mitchell_netravali": "",
+          "nearest_neighbor": ""
+        },
+        "label": ""
+      },
+      "title": ""
     },
     "user_preferences": {
       "change_language": {
@@ -288,6 +306,7 @@
     "media": {
       "album_path": "",
       "exif": {
+        "description": "",
         "exposure_program": {
           "action_program": "Действие программа",
           "aperture_priority": "Приоритет диафрагмы",
@@ -351,6 +370,7 @@
     "people": "Люди",
     "photos": "Фото",
     "places": "Места",
+    "search": "",
     "settings": "Настройки"
   },
   "timeline_filter": {

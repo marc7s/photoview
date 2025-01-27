@@ -49,6 +49,8 @@ const PersonPage = React.lazy(() =>
   }))
 )
 
+const SearchPage = React.lazy(() => import('../../Pages/SearchPage/SearchPage'))
+
 const Routes = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -111,6 +113,10 @@ const Routes = () => {
           element: <PeoplePage />,
         },
       ],
+    },
+    {
+      path: '/search',
+      element: authorized(<SearchPage />),
     },
     {
       // for backwards-compatibility

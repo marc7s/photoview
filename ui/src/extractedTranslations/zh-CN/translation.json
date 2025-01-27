@@ -121,6 +121,9 @@
   "routes": {
     "page_not_found": "找不到网页"
   },
+  "search_page": {
+    "title": ""
+  },
   "settings": {
     "concurrent_workers": {
       "description": "最多允许同时进行的扫描任务数目",
@@ -146,6 +149,21 @@
       "description": "将扫描所有用户新添加及更新的媒体文件",
       "scan_all_users": "扫描所有用户",
       "title": "扫描"
+    },
+    "thumbnails": {
+      "method": {
+        "description": "",
+        "filter": {
+          "box": "",
+          "catmull_rom": "",
+          "Lanczos": "",
+          "linear": "",
+          "mitchell_netravali": "",
+          "nearest_neighbor": ""
+        },
+        "label": ""
+      },
+      "title": ""
     },
     "user_preferences": {
       "change_language": {
@@ -254,7 +272,11 @@
     "download": {
       "filesize": {
         "byte_one": "{{count}} 字节",
-        "byte_other": "{{count}} 字节"
+        "byte_other": "{{count}} 字节",
+        "giga_byte_other": "",
+        "kilo_byte_other": "",
+        "mega_byte_other": "",
+        "tera_byte_other": ""
       },
       "table_columns": {
         "dimensions": "尺寸",
@@ -270,6 +292,7 @@
     "media": {
       "album_path": "",
       "exif": {
+        "description": "",
         "exposure_program": {
           "action_program": "动态模式",
           "aperture_priority": "光圈优先",
@@ -333,6 +356,7 @@
     "people": "人物",
     "photos": "时间线",
     "places": "地点",
+    "search": "",
     "settings": "设置"
   },
   "timeline_filter": {

@@ -121,6 +121,9 @@
   "routes": {
     "page_not_found": "找不到網頁"
   },
+  "search_page": {
+    "title": ""
+  },
   "settings": {
     "concurrent_workers": {
       "description": "最多同時進行的掃描工作數目",
@@ -146,6 +149,21 @@
       "description": "將掃描所有使用者的新媒體或更新媒體",
       "scan_all_users": "掃描所有使用者",
       "title": "掃描"
+    },
+    "thumbnails": {
+      "method": {
+        "description": "",
+        "filter": {
+          "box": "",
+          "catmull_rom": "",
+          "Lanczos": "",
+          "linear": "",
+          "mitchell_netravali": "",
+          "nearest_neighbor": ""
+        },
+        "label": ""
+      },
+      "title": ""
     },
     "user_preferences": {
       "change_language": {
@@ -273,6 +291,7 @@
     "media": {
       "album_path": "",
       "exif": {
+        "description": "",
         "exposure_program": {
           "action_program": "動態模式",
           "aperture_priority": "光圈優先",
@@ -336,6 +355,7 @@
     "people": "人物",
     "photos": "時間線",
     "places": "地點",
+    "search": "",
     "settings": "設定"
   },
   "timeline_filter": {

@@ -9,6 +9,18 @@ import (
 	"time"
 )
 
+type AdvancedQuery struct {
+	// Perform a search query on the contents of the media library
+	Search *AdvancedSearchResult `json:"search"`
+}
+
+type AdvancedSearchResult struct {
+	// The string that was searched for
+	Query string `json:"query"`
+	// A list of media that matched the query
+	Media []*Media `json:"media"`
+}
+
 type AuthorizeResult struct {
 	Success bool `json:"success"`
 	// A textual status message describing the result, can be used to show an error message when `success` is false

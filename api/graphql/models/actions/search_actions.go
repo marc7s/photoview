@@ -38,7 +38,7 @@ func Search(db *gorm.DB, query string, userID int, limitMedia *int, limitAlbums 
 		Where("LOWER(media.title) LIKE ? OR LOWER(media.path) LIKE ?", wildQuery, wildQuery).
 		Clauses(clause.OrderBy{
 			Expression: clause.Expr{
-				SQL:    "(CASE WHEN LOWER(media.title) LIKE ? THEN 2 WHEN LOWER(media.path) LIKE ? THEN 1 END) DESC",
+				SQL:                "(CASE WHEN LOWER(media.title) LIKE ? THEN 2 WHEN LOWER(media.path) LIKE ? THEN 1 END) DESC",
 				Vars:               []interface{}{wildQuery, wildQuery},
 				WithoutParentheses: true},
 		}).
@@ -70,6 +70,47 @@ func Search(db *gorm.DB, query string, userID int, limitMedia *int, limitAlbums 
 		Query:  query,
 		Media:  media,
 		Albums: albums,
+	}
+
+	return &result, nil
+}
+
+func AdvancedSearch(db *gorm.DB, query string, userID int, limitMedia *int) (*models.AdvancedSearchResult, error) {
+	limitMediaInternal := 10
+
+	if limitMedia != nil {
+		limitMediaInternal = *limitMedia
+	}
+
+	wildQuery := "%" + strings.ToLower(query) + "%"
+
+	var media []*models.Media
+
+	userSubquery := db.Table("user_albums").Where("user_id = ?", userID)
+	if drivers.POSTGRES.MatchDatabase(db) {
+		userSubquery = userSubquery.Where("album_id = \"Album\".id")
+	} else {
+		userSubquery = userSubquery.Where("album_id = Album.id")
+	}
+
+	err := db.Joins("Album").
+		Where("EXISTS (?)", userSubquery).
+		Where("LOWER(media.title) LIKE ? OR LOWER(media.path) LIKE ?", wildQuery, wildQuery).
+		Clauses(clause.OrderBy{
+			Expression: clause.Expr{
+				SQL:                "(CASE WHEN LOWER(media.title) LIKE ? THEN 2 WHEN LOWER(media.path) LIKE ? THEN 1 END) DESC",
+				Vars:               []interface{}{wildQuery, wildQuery},
+				WithoutParentheses: true},
+		}).
+		Limit(limitMediaInternal).Find(&media).Error
+
+	if err != nil {
+		return nil, errors.Wrapf(err, "searching media")
+	}
+
+	result := models.AdvancedSearchResult{
+		Query: query,
+		Media: media,
 	}
 
 	return &result, nil

@@ -121,6 +121,9 @@
   "routes": {
     "page_not_found": "Side ikke fundet"
   },
+  "search_page": {
+    "title": ""
+  },
   "settings": {
     "concurrent_workers": {
       "description": "Det maksimale antal medier som må skannes samtidig",
@@ -146,6 +149,21 @@
       "description": "Vil scanne alle brugere for nye eller opdaterede medier",
       "scan_all_users": "Scan alle brugere",
       "title": "Scanner"
+    },
+    "thumbnails": {
+      "method": {
+        "description": "",
+        "filter": {
+          "box": "",
+          "catmull_rom": "",
+          "Lanczos": "",
+          "linear": "",
+          "mitchell_netravali": "",
+          "nearest_neighbor": ""
+        },
+        "label": ""
+      },
+      "title": ""
     },
     "user_preferences": {
       "change_language": {
@@ -278,6 +296,7 @@
     "media": {
       "album_path": "Album sti",
       "exif": {
+        "description": "",
         "exposure_program": {
           "action_program": "Actionprogram",
           "aperture_priority": "Blændeprioritet",
@@ -341,6 +360,7 @@
     "people": "Personer",
     "photos": "Tidslinje",
     "places": "Kort",
+    "search": "",
     "settings": "Indstillinger"
   },
   "timeline_filter": {

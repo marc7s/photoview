@@ -144,6 +144,19 @@ export const MainMenu = () => {
             }
           />
         ) : null}
+        <MenuButton
+          to="/search"
+          exact
+          label={t('sidemenu.search', 'Search')}
+          background="#ff797b"
+          activeClasses="ring-[#fff1f2] bg-[#fff1f2] dark:ring-[#1d1516] dark:bg-[#1d1516]"
+          className="focus:ring-orange-200 dark:focus:ring-[#863541]"
+          icon={
+            <svg viewBox="0 0 24 24" fill="white">
+              <path d="M19,2 C19.5522847,2 20,2.44771525 20,3 L20,21 C20,21.5522847 19.5522847,22 19,22 L6,22 C4.8954305,22 4,21.1045695 4,20 L4,4 C4,2.8954305 4.8954305,2 6,2 L19,2 Z M14.1465649,9 L10.9177928,13.7443828 L8.72759325,11.2494916 L6,15 L18,15 L14.1465649,9 Z M11,9 C10.4477153,9 10,9.44771525 10,10 C10,10.5522847 10.4477153,11 11,11 C11.5522847,11 12,10.5522847 12,10 C12,9.44771525 11.5522847,9 11,9 Z"></path>
+            </svg>
+          }
+        />
         <MenuSeparator />
         <MenuButton
           to="/settings"

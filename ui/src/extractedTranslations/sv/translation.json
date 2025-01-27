@@ -121,6 +121,9 @@
   "routes": {
     "page_not_found": "Sidan hittades inte"
   },
+  "search_page": {
+    "title": ""
+  },
   "settings": {
     "concurrent_workers": {
       "description": "Max antal skannerjobb som får köras sammtidigt",
@@ -146,6 +149,21 @@
       "description": "Ska skanna alla användare efter nya eller uppdaterade media ",
       "scan_all_users": "Skanna alla användare",
       "title": "Skanner"
+    },
+    "thumbnails": {
+      "method": {
+        "description": "",
+        "filter": {
+          "box": "",
+          "catmull_rom": "",
+          "Lanczos": "",
+          "linear": "",
+          "mitchell_netravali": "",
+          "nearest_neighbor": ""
+        },
+        "label": ""
+      },
+      "title": ""
     },
     "user_preferences": {
       "change_language": {
@@ -278,6 +296,7 @@
     "media": {
       "album_path": "",
       "exif": {
+        "description": "",
         "exposure_program": {
           "action_program": "Actionprogram",
           "aperture_priority": "Bländarprioritet",
@@ -341,6 +360,7 @@
     "people": "Personer",
     "photos": "Bilder",
     "places": "Platser",
+    "search": "",
     "settings": "Inställningar"
   },
   "timeline_filter": {

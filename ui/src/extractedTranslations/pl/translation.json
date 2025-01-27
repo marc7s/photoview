@@ -121,6 +121,9 @@
   "routes": {
     "page_not_found": "Nie znaleziono strony"
   },
+  "search_page": {
+    "title": ""
+  },
   "settings": {
     "concurrent_workers": {
       "description": "Maksymalna liczba zadań skanera, które mogą być uruchomione jednocześnie",
@@ -146,6 +149,21 @@
       "description": "Skanuje wszystkich użytkowników w poszukiwaniu nowych lub zaktualizowanych mediów",
       "scan_all_users": "Przeskanuj wszystkich użytkowników",
       "title": "Skaner"
+    },
+    "thumbnails": {
+      "method": {
+        "description": "",
+        "filter": {
+          "box": "",
+          "catmull_rom": "",
+          "Lanczos": "",
+          "linear": "",
+          "mitchell_netravali": "",
+          "nearest_neighbor": ""
+        },
+        "label": ""
+      },
+      "title": ""
     },
     "user_preferences": {
       "change_language": {
@@ -254,9 +272,9 @@
     "download": {
       "filesize": {
         "byte_one": "{{count}} bajt",
-        "byte_other": "{{count}} bajty",
         "byte_few": "",
         "byte_many": "",
+        "byte_other": "{{count}} bajty",
         "giga_byte_one": "",
         "giga_byte_few": "",
         "giga_byte_many": "",
@@ -288,6 +306,7 @@
     "media": {
       "album_path": "Ścieżka albumu",
       "exif": {
+        "description": "",
         "exposure_program": {
           "action_program": "Program działania",
           "aperture_priority": "Priorytet przysłony",
@@ -351,6 +370,7 @@
     "people": "Ludzie",
     "photos": "Zdjęcia",
     "places": "Miejsca",
+    "search": "",
     "settings": "Ustawienia"
   },
   "timeline_filter": {

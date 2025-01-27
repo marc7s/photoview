@@ -121,6 +121,9 @@
   "routes": {
     "page_not_found": "Seite nicht gefunden"
   },
+  "search_page": {
+    "title": ""
+  },
   "settings": {
     "concurrent_workers": {
       "description": "Die maximale erlaubte Anzahl an gleichzeitig laufenden Scanner Jobs",
@@ -146,6 +149,21 @@
       "description": "Neue und aktualisierte Medien aller Benutzer scannen",
       "scan_all_users": "Alle Benutzer scannen",
       "title": "Scanner"
+    },
+    "thumbnails": {
+      "method": {
+        "description": "",
+        "filter": {
+          "box": "",
+          "catmull_rom": "",
+          "Lanczos": "",
+          "linear": "",
+          "mitchell_netravali": "",
+          "nearest_neighbor": ""
+        },
+        "label": ""
+      },
+      "title": ""
     },
     "user_preferences": {
       "change_language": {
@@ -278,6 +296,7 @@
     "media": {
       "album_path": "Pfad",
       "exif": {
+        "description": "",
         "exposure_program": {
           "action_program": "Action (kurze Verschlusszeit)",
           "aperture_priority": "Blende Priorität",
@@ -341,6 +360,7 @@
     "people": "Personen",
     "photos": "Fotos",
     "places": "Orte",
+    "search": "",
     "settings": "Einstellungen"
   },
   "timeline_filter": {

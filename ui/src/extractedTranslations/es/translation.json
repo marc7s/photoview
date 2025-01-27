@@ -121,6 +121,9 @@
   "routes": {
     "page_not_found": "Página no encontrada"
   },
+  "search_page": {
+    "title": ""
+  },
   "settings": {
     "concurrent_workers": {
       "description": "La cantidad máxima de tareas de escaneo que pueden ejecutarse al mismo tiempo",
@@ -146,6 +149,21 @@
       "description": "Escaneará todos los usuarios para buscar archivos nuevos o actualizados",
       "scan_all_users": "Escanear todos los usuarios",
       "title": "Escáner"
+    },
+    "thumbnails": {
+      "method": {
+        "description": "",
+        "filter": {
+          "box": "",
+          "catmull_rom": "",
+          "Lanczos": "",
+          "linear": "",
+          "mitchell_netravali": "",
+          "nearest_neighbor": ""
+        },
+        "label": ""
+      },
+      "title": ""
     },
     "user_preferences": {
       "change_language": {
@@ -254,14 +272,19 @@
     "download": {
       "filesize": {
         "byte_one": "",
+        "byte_many": "",
         "byte_other": "",
         "giga_byte_one": "",
+        "giga_byte_many": "",
         "giga_byte_other": "",
         "kilo_byte_one": "",
+        "kilo_byte_many": "",
         "kilo_byte_other": "",
         "mega_byte_one": "",
+        "mega_byte_many": "",
         "mega_byte_other": "",
         "tera_byte_one": "",
+        "tera_byte_many": "",
         "tera_byte_other": ""
       },
       "table_columns": {
@@ -278,6 +301,7 @@
     "media": {
       "album_path": "",
       "exif": {
+        "description": "",
         "exposure_program": {
           "action_program": "Programa de acción",
           "aperture_priority": "Prioridad de abertura",
@@ -341,6 +365,7 @@
     "people": "Personas",
     "photos": "Fotos",
     "places": "Lugares",
+    "search": "",
     "settings": "Opciones"
   },
   "timeline_filter": {

@@ -59,6 +59,15 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	AdvancedQuery struct {
+		Search func(childComplexity int, query string, limitMedia *int) int
+	}
+
+	AdvancedSearchResult struct {
+		Media func(childComplexity int) int
+		Query func(childComplexity int) int
+	}
+
 	Album struct {
 		FilePath    func(childComplexity int) int
 		ID          func(childComplexity int) int
@@ -391,6 +400,32 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e, 0, 0, nil}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "AdvancedQuery.search":
+		if e.complexity.AdvancedQuery.Search == nil {
+			break
+		}
+
+		args, err := ec.field_AdvancedQuery_search_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.AdvancedQuery.Search(childComplexity, args["query"].(string), args["limitMedia"].(*int)), true
+
+	case "AdvancedSearchResult.media":
+		if e.complexity.AdvancedSearchResult.Media == nil {
+			break
+		}
+
+		return e.complexity.AdvancedSearchResult.Media(childComplexity), true
+
+	case "AdvancedSearchResult.query":
+		if e.complexity.AdvancedSearchResult.Query == nil {
+			break
+		}
+
+		return e.complexity.AdvancedSearchResult.Query(childComplexity), true
 
 	case "Album.filePath":
 		if e.complexity.Album.FilePath == nil {
@@ -1784,7 +1819,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 	return introspection.WrapTypeFromDef(ec.Schema(), ec.Schema().Types[name]), nil
 }
 
-//go:embed "resolvers/album.graphql" "resolvers/faces.graphql" "resolvers/media.graphql" "resolvers/media_geo_json.graphql" "resolvers/notification.graphql" "resolvers/root.graphql" "resolvers/scanner.graphql" "resolvers/search.graphql" "resolvers/share_token.graphql" "resolvers/site_info.graphql" "resolvers/thumbnails.graphql" "resolvers/timeline.graphql" "resolvers/user.graphql"
+//go:embed "resolvers/advanced_search.graphql" "resolvers/album.graphql" "resolvers/faces.graphql" "resolvers/media.graphql" "resolvers/media_geo_json.graphql" "resolvers/notification.graphql" "resolvers/root.graphql" "resolvers/scanner.graphql" "resolvers/search.graphql" "resolvers/share_token.graphql" "resolvers/site_info.graphql" "resolvers/thumbnails.graphql" "resolvers/timeline.graphql" "resolvers/user.graphql"
 var sourcesFS embed.FS
 
 func sourceData(filename string) string {
@@ -1796,6 +1831,7 @@ func sourceData(filename string) string {
 }
 
 var sources = []*ast.Source{
+	{Name: "resolvers/advanced_search.graphql", Input: sourceData("resolvers/advanced_search.graphql"), BuiltIn: false},
 	{Name: "resolvers/album.graphql", Input: sourceData("resolvers/album.graphql"), BuiltIn: false},
 	{Name: "resolvers/faces.graphql", Input: sourceData("resolvers/faces.graphql"), BuiltIn: false},
 	{Name: "resolvers/media.graphql", Input: sourceData("resolvers/media.graphql"), BuiltIn: false},
@@ -1815,6 +1851,57 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_AdvancedQuery_search_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_AdvancedQuery_search_argsQuery(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["query"] = arg0
+	arg1, err := ec.field_AdvancedQuery_search_argsLimitMedia(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["limitMedia"] = arg1
+	return args, nil
+}
+func (ec *executionContext) field_AdvancedQuery_search_argsQuery(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	if _, ok := rawArgs["query"]; !ok {
+		var zeroVal string
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("query"))
+	if tmp, ok := rawArgs["query"]; ok {
+		return ec.unmarshalNString2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_AdvancedQuery_search_argsLimitMedia(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (*int, error) {
+	if _, ok := rawArgs["limitMedia"]; !ok {
+		var zeroVal *int
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("limitMedia"))
+	if tmp, ok := rawArgs["limitMedia"]; ok {
+		return ec.unmarshalOInt2ᚖint(ctx, tmp)
+	}
+
+	var zeroVal *int
+	return zeroVal, nil
+}
 
 func (ec *executionContext) field_Album_media_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
@@ -3753,6 +3840,189 @@ func (ec *executionContext) field___Type_fields_argsIncludeDeprecated(
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
+
+func (ec *executionContext) _AdvancedQuery_search(ctx context.Context, field graphql.CollectedField, obj *models.AdvancedQuery) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_AdvancedQuery_search(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Search, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.AdvancedSearchResult)
+	fc.Result = res
+	return ec.marshalNAdvancedSearchResult2ᚖgithubᚗcomᚋphotoviewᚋphotoviewᚋapiᚋgraphqlᚋmodelsᚐAdvancedSearchResult(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_AdvancedQuery_search(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "AdvancedQuery",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "query":
+				return ec.fieldContext_AdvancedSearchResult_query(ctx, field)
+			case "media":
+				return ec.fieldContext_AdvancedSearchResult_media(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type AdvancedSearchResult", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_AdvancedQuery_search_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _AdvancedSearchResult_query(ctx context.Context, field graphql.CollectedField, obj *models.AdvancedSearchResult) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_AdvancedSearchResult_query(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Query, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_AdvancedSearchResult_query(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "AdvancedSearchResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _AdvancedSearchResult_media(ctx context.Context, field graphql.CollectedField, obj *models.AdvancedSearchResult) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_AdvancedSearchResult_media(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Media, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.Media)
+	fc.Result = res
+	return ec.marshalNMedia2ᚕᚖgithubᚗcomᚋphotoviewᚋphotoviewᚋapiᚋgraphqlᚋmodelsᚐMediaᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_AdvancedSearchResult_media(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "AdvancedSearchResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Media_id(ctx, field)
+			case "title":
+				return ec.fieldContext_Media_title(ctx, field)
+			case "path":
+				return ec.fieldContext_Media_path(ctx, field)
+			case "thumbnail":
+				return ec.fieldContext_Media_thumbnail(ctx, field)
+			case "highRes":
+				return ec.fieldContext_Media_highRes(ctx, field)
+			case "videoWeb":
+				return ec.fieldContext_Media_videoWeb(ctx, field)
+			case "album":
+				return ec.fieldContext_Media_album(ctx, field)
+			case "exif":
+				return ec.fieldContext_Media_exif(ctx, field)
+			case "videoMetadata":
+				return ec.fieldContext_Media_videoMetadata(ctx, field)
+			case "favorite":
+				return ec.fieldContext_Media_favorite(ctx, field)
+			case "type":
+				return ec.fieldContext_Media_type(ctx, field)
+			case "date":
+				return ec.fieldContext_Media_date(ctx, field)
+			case "blurhash":
+				return ec.fieldContext_Media_blurhash(ctx, field)
+			case "shares":
+				return ec.fieldContext_Media_shares(ctx, field)
+			case "downloads":
+				return ec.fieldContext_Media_downloads(ctx, field)
+			case "faces":
+				return ec.fieldContext_Media_faces(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Media", field.Name)
+		},
+	}
+	return fc, nil
+}
 
 func (ec *executionContext) _Album_id(ctx context.Context, field graphql.CollectedField, obj *models.Album) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Album_id(ctx, field)
@@ -14939,6 +15209,89 @@ func (ec *executionContext) unmarshalInputShareTokenCredentials(ctx context.Cont
 
 // region    **************************** object.gotpl ****************************
 
+var advancedQueryImplementors = []string{"AdvancedQuery"}
+
+func (ec *executionContext) _AdvancedQuery(ctx context.Context, sel ast.SelectionSet, obj *models.AdvancedQuery) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, advancedQueryImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AdvancedQuery")
+		case "search":
+			out.Values[i] = ec._AdvancedQuery_search(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var advancedSearchResultImplementors = []string{"AdvancedSearchResult"}
+
+func (ec *executionContext) _AdvancedSearchResult(ctx context.Context, sel ast.SelectionSet, obj *models.AdvancedSearchResult) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, advancedSearchResultImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AdvancedSearchResult")
+		case "query":
+			out.Values[i] = ec._AdvancedSearchResult_query(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "media":
+			out.Values[i] = ec._AdvancedSearchResult_media(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var albumImplementors = []string{"Album"}
 
 func (ec *executionContext) _Album(ctx context.Context, sel ast.SelectionSet, obj *models.Album) graphql.Marshaler {
@@ -17753,6 +18106,16 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 // endregion **************************** object.gotpl ****************************
 
 // region    ***************************** type.gotpl *****************************
+
+func (ec *executionContext) marshalNAdvancedSearchResult2ᚖgithubᚗcomᚋphotoviewᚋphotoviewᚋapiᚋgraphqlᚋmodelsᚐAdvancedSearchResult(ctx context.Context, sel ast.SelectionSet, v *models.AdvancedSearchResult) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._AdvancedSearchResult(ctx, sel, v)
+}
 
 func (ec *executionContext) marshalNAlbum2githubᚗcomᚋphotoviewᚋphotoviewᚋapiᚋgraphqlᚋmodelsᚐAlbum(ctx context.Context, sel ast.SelectionSet, v models.Album) graphql.Marshaler {
 	return ec._Album(ctx, sel, &v)

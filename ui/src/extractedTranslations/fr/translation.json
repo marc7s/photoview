@@ -121,6 +121,9 @@
   "routes": {
     "page_not_found": "Page non trouvée"
   },
+  "search_page": {
+    "title": ""
+  },
   "settings": {
     "concurrent_workers": {
       "description": "Nombre maximal de tâches d'analyse simultanées.",
@@ -146,6 +149,21 @@
       "description": "Analyser tous les utilisateurs à la recherche de nouveaux médias ou de médias mis à jour",
       "scan_all_users": "Analyser tous les utilisateurs",
       "title": "Analyse"
+    },
+    "thumbnails": {
+      "method": {
+        "description": "",
+        "filter": {
+          "box": "",
+          "catmull_rom": "",
+          "Lanczos": "",
+          "linear": "",
+          "mitchell_netravali": "",
+          "nearest_neighbor": ""
+        },
+        "label": ""
+      },
+      "title": ""
     },
     "user_preferences": {
       "change_language": {
@@ -283,6 +301,7 @@
     "media": {
       "album_path": "",
       "exif": {
+        "description": "",
         "exposure_program": {
           "action_program": "Programme d'action",
           "aperture_priority": "Priorité d'ouverture",
@@ -346,6 +365,7 @@
     "people": "Personnes",
     "photos": "Photos",
     "places": "Lieux",
+    "search": "",
     "settings": "Réglages"
   },
   "timeline_filter": {

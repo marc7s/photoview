@@ -121,6 +121,9 @@
   "routes": {
     "page_not_found": "Page not found"
   },
+  "search_page": {
+    "title": "Search"
+  },
   "settings": {
     "concurrent_workers": {
       "description": "The maximum amount of scanner jobs that is allowed to run at once",
@@ -146,6 +149,21 @@
       "description": "Will scan all users for new or updated media",
       "scan_all_users": "Scan all users",
       "title": "Scanner"
+    },
+    "thumbnails": {
+      "method": {
+        "description": "The filter to use when generating thumbnails",
+        "filter": {
+          "box": "Box",
+          "catmull_rom": "Catmull-Rom",
+          "Lanczos": "Lanczos (highest quality)",
+          "linear": "Linear",
+          "mitchell_netravali": "Mitchell-Netravali",
+          "nearest_neighbor": "Nearest Neighbor (default)"
+        },
+        "label": "Downsampling method"
+      },
+      "title": "Thumbnail preferences"
     },
     "user_preferences": {
       "change_language": {
@@ -278,6 +296,7 @@
     "media": {
       "album_path": "Album path",
       "exif": {
+        "description": "Description",
         "exposure_program": {
           "action_program": "Action program",
           "aperture_priority": "Aperture priority",
@@ -341,6 +360,7 @@
     "people": "People",
     "photos": "Timeline",
     "places": "Places",
+    "search": "Search",
     "settings": "Settings"
   },
   "timeline_filter": {
