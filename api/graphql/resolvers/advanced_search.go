@@ -6,6 +6,7 @@ package resolvers
 
 import (
 	"context"
+	"time"
 
 	"github.com/photoview/photoview/api/graphql/auth"
 	"github.com/photoview/photoview/api/graphql/models"
@@ -13,11 +14,11 @@ import (
 )
 
 // Search is the resolver for the search field.
-func (r *queryResolver) AdvancedSearch(ctx context.Context, query string, limitMedia *int) (*models.AdvancedSearchResult, error) {
+func (r *queryResolver) AdvancedSearch(ctx context.Context, fileNames []*string, albumIDs []*int, startDate *time.Time, endDate *time.Time, limitMedia *int) (*models.AdvancedSearchResult, error) {
 	user := auth.UserFromContext(ctx)
 	if user == nil {
 		return nil, auth.ErrUnauthorized
 	}
 
-	return actions.AdvancedSearch(r.DB(ctx), query, user.ID, limitMedia)
+	return actions.AdvancedSearch(r.DB(ctx), fileNames, albumIDs, startDate, endDate, user.ID, limitMedia)
 }

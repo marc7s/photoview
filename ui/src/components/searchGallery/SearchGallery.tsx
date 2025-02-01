@@ -4,10 +4,10 @@ import {
   mediaGalleryReducer,
   urlPresentModeSetupHook,
 } from '../photoGallery/mediaGalleryReducer'
-import { MediaGalleryFields } from '../photoGallery/__generated__/MediaGalleryFields'
+import { advancedSearchQuery_advancedSearch_media } from '../advancedSearch/__generated__/advancedSearchQuery'
 
 type SearchGalleryProps = {
-  media?: MediaGalleryFields[]
+  media?: advancedSearchQuery_advancedSearch_media[]
   loading?: boolean
 }
 

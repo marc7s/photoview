@@ -9,14 +9,7 @@ import (
 	"time"
 )
 
-type AdvancedQuery struct {
-	// Perform a search query on the contents of the media library
-	Search *AdvancedSearchResult `json:"search"`
-}
-
 type AdvancedSearchResult struct {
-	// The string that was searched for
-	Query string `json:"query"`
 	// A list of media that matched the query
 	Media []*Media `json:"media"`
 }

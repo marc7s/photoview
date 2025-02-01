@@ -1,31 +1,54 @@
-import { useEffect, useState } from 'react'
-import { TextField } from '../../primitives/form/Input'
+import { useState } from 'react'
+import { Button, TextField } from '../../primitives/form/Input'
 
 type AdvancedSearchFilterProps = {
+  title: string
   id: string
-  filterChangedHandler: (newVal: string | undefined) => void
+  filterChangedHandler: (newVal: (string | undefined)[]) => void
 }
 
 export const AdvancedSearchFilter = ({
+  title,
   id,
   filterChangedHandler,
 }: AdvancedSearchFilterProps) => {
-  const [filterValue, setFilterValue] = useState<string | undefined>()
+  const [filterValues, setFilterValues] = useState<(string | undefined)[]>([undefined])
 
   function submit() {
-    filterChangedHandler(filterValue)
+    filterChangedHandler(filterValues)
   }
 
-  return (
-    <TextField
-      type="text"
-      id={id}
-      value={filterValue}
-      onChange={event => {
-        setFilterValue(event.target.value)
-      }}
-      onBlur={() => submit()}
-      onKeyDown={event => event.key == 'Enter' && submit()}
-    />
-  )
+  function setFilterValue(index: number, value: string | undefined) {
+    const fc = [...filterValues]
+    fc[index] = value
+    setFilterValues(fc)
+  }
+
+  function removeFilter(index: number) {
+    const fc = [...filterValues]
+    fc.splice(index, 1)
+    setFilterValues(fc)
+    submit()
+  }
+
+  return <div className="flex">
+    {
+      filterValues.map((v, i) => <div className="flex" key={id + i}>
+          <TextField
+            type="text"
+            label={title}
+            id={id + i}
+            value={v}
+            onChange={event => {
+              setFilterValue(i, event.target.value)
+            }}
+            onBlur={() => submit()}
+            onKeyDown={event => event.key == 'Enter' && submit()}
+          />
+          <Button onClick={() => removeFilter(i)}>-</Button>
+      </div>)
+    }
+    <Button onClick={() => setFilterValues([...filterValues, undefined])}>+</Button>
+  </div>
+    
 }
