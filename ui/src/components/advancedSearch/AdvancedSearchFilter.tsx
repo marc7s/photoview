@@ -4,12 +4,16 @@ import { Button, TextField } from '../../primitives/form/Input'
 type AdvancedSearchFilterProps = {
   title: string
   id: string
+  type: "text" | "number" | "date"
+  maxFilterCount?: number
   filterChangedHandler: (newVal: (string | undefined)[]) => void
 }
 
 export const AdvancedSearchFilter = ({
   title,
   id,
+  type,
+  maxFilterCount = 5,
   filterChangedHandler,
 }: AdvancedSearchFilterProps) => {
   const [filterValues, setFilterValues] = useState<(string | undefined)[]>([undefined])
@@ -35,7 +39,7 @@ export const AdvancedSearchFilter = ({
     {
       filterValues.map((v, i) => <div className="flex" key={id + i}>
           <TextField
-            type="text"
+            type={type}
             label={title}
             id={id + i}
             value={v}
@@ -45,10 +49,10 @@ export const AdvancedSearchFilter = ({
             onBlur={() => submit()}
             onKeyDown={event => event.key == 'Enter' && submit()}
           />
-          <Button onClick={() => removeFilter(i)}>-</Button>
+          { filterValues.length > 1 && <Button onClick={() => removeFilter(i)}>-</Button> }
       </div>)
     }
-    <Button onClick={() => setFilterValues([...filterValues, undefined])}>+</Button>
+    { filterValues.length < maxFilterCount && <Button onClick={() => setFilterValues([...filterValues, undefined])}>+</Button>}
   </div>
     
 }

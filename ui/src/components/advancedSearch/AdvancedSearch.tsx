@@ -7,14 +7,14 @@ import { MEDIA_GALLERY_FRAGMENT } from '../photoGallery/MediaGallery'
 import { Button } from '../../primitives/form/Input'
 import { advancedSearchQuery, advancedSearchQuery_advancedSearch_media } from './__generated__/advancedSearchQuery'
 
-interface SearchFilters {
+/*interface SearchFilters {
   albumIDs: string[]
   faceGroupIDs: string[]
   fileNameNeedles: string[],
   cameras: string[],
   startDate: Date | undefined,
   endDate: Date | undefined
-}
+}*/
 
 const ADV_SEARCH_QUERY = gql`
   ${MEDIA_GALLERY_FRAGMENT}
@@ -32,6 +32,8 @@ type AdvancedSearchResultsProps = {
   media: advancedSearchQuery_advancedSearch_media[]
   loading: boolean
 }
+
+const NULLDATE = new Date("0000-01-01")
 
 const AdvancedSearchResults = ({
   media,
@@ -57,18 +59,29 @@ export const AdvancedSearchQuery = () => {
   
   const [filterAlbums, setFilterAlbums] = useState<number[]>([])
   const [filterFileNames, setFilterFileNames] = useState<string[]>([])
+  const [filterFaceGroups, setFilterFaceGroups] = useState<number[]>([])
+  const [filterCameras, setFilterCameras] = useState<string[]>([])
+  const [filterStartDate, setFilterStartDate] = useState<Date>(NULLDATE)
+  const [filterEndDate, setFilterEndDate] = useState<Date>(NULLDATE)
   
-  const [searchFilters, setSearchFilters] = useState<SearchFilters>({
+  /*const [searchFilters, setSearchFilters] = useState<SearchFilters>({
     albumIDs: [],
     faceGroupIDs: [],
     fileNameNeedles: [],
     cameras: [],
     startDate: undefined,
     endDate: undefined
-  })
+  })*/
 
   function filterChanged<T>(conv: (_: string | undefined) => T | undefined, setState: Dispatch<SetStateAction<T[]>>, newValues: (string | undefined)[]): void {
     setState(newValues.filter(v => v && v.length > 0).map(v => conv(v)).filter(v => v !== undefined))
+    setSearchUpdated(false)
+  }
+
+  // If date, only consider the first element as we only expect a single value
+  function dateChanged(setState: Dispatch<SetStateAction<Date>>, newVals: (string | undefined)[]) {
+    const newDateVal = newVals.length < 1 || newVals[0] === undefined || isNaN(Date.parse(newVals[0])) ? NULLDATE : new Date(newVals[0])
+    setState(newDateVal)
     setSearchUpdated(false)
   }
 
@@ -81,6 +94,10 @@ export const AdvancedSearchQuery = () => {
   function search() {
     console.log(filterAlbums)
     console.log(filterFileNames)
+    console.log(filterFaceGroups)
+    console.log(filterCameras)
+    console.log(filterStartDate)
+    console.log(filterEndDate)
 
     const fileNames: string[] = ['2621', '2623126']
     const albumIDs: number[] = [1]
@@ -93,16 +110,49 @@ export const AdvancedSearchQuery = () => {
 
   return (
     <div>
-      <div className="mb-10">
+      <div className="mb-10 flex flex-col gap-4">
         <AdvancedSearchFilter
           title="Album"
-          id="albumFilter"
+          id="albumFilters"
+          type="number"
           filterChangedHandler={(val) => filterChanged(intConv, setFilterAlbums, val)}
         />
+        
         <AdvancedSearchFilter
           title="File name"
-          id="fileNameFilter"
+          id="fileNameFilters"
+          type="text"
           filterChangedHandler={(val) => filterChanged(v => v, setFilterFileNames, val)}
+        />
+
+        <AdvancedSearchFilter
+          title="Face group"
+          id="faceGroupFilters"
+          type="number"
+          filterChangedHandler={(val) => filterChanged(intConv, setFilterFaceGroups, val)}
+        />
+
+        <AdvancedSearchFilter
+          title="Camera"
+          id="cameraFilters"
+          type="text"
+          filterChangedHandler={(val) => filterChanged(v => v, setFilterCameras, val)}
+        />
+
+        <AdvancedSearchFilter
+          title="Start date"
+          id="startDateFilter"
+          type="date"
+          maxFilterCount={1}
+          filterChangedHandler={(val) => dateChanged(setFilterStartDate, val)}
+        />
+
+        <AdvancedSearchFilter
+          title="End date"
+          id="endDateFilter"
+          type="date"
+          maxFilterCount={1}
+          filterChangedHandler={(val) => dateChanged(setFilterEndDate, val)}
         />
       </div>
       <Button onClick={() => search()} disabled={searchUpdated}>
