@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useReducer, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { AdvancedSearchFilter } from './AdvancedSearchFilter'
 import { useLazyQuery, gql } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
@@ -15,6 +15,64 @@ import { advancedSearchQuery, advancedSearchQuery_advancedSearch_media } from '.
   startDate: Date | undefined,
   endDate: Date | undefined
 }*/
+
+interface DateFilterSpan {
+  startDate: Date | undefined
+  endDate: Date | undefined
+}
+
+type DateFilterProps = {
+  mode: DateFilterMode
+  updateDateFilter: (span: DateFilterSpan) => void
+}
+
+function DateFilter({ mode, updateDateFilter }: DateFilterProps): JSX.Element {
+  const [filterStartDate, setFilterStartDate] = useState<Date | undefined>(undefined)
+  const [filterEndDate, setFilterEndDate] = useState<Date | undefined>(undefined)
+
+  // Reset start or end date when changing modes, so endpoints are not accidentally transferred
+  useEffect(() => {
+    if (mode === "After")
+      setFilterEndDate(undefined)
+    if (mode === "Before")
+      setFilterStartDate(undefined)
+  }, [mode])
+
+  // Synchronize local state with external state
+  useEffect(() => {
+    updateDateFilter({
+      startDate: filterStartDate,
+      endDate: filterEndDate
+    })
+  }, [filterStartDate, filterEndDate])
+  
+  // If date, only consider the first element as we only expect a single value
+  function dateChanged(setState: Dispatch<SetStateAction<Date | undefined>>, newVals: (string | undefined)[]) {
+    const newDateVal = newVals.length < 1 || newVals[0] === undefined || isNaN(Date.parse(newVals[0])) ? undefined : new Date(newVals[0])
+    setState(newDateVal)
+  }
+
+  const startDateFilter: JSX.Element = <AdvancedSearchFilter
+      title="Start date"
+      id="startDateFilter"
+      type="date"
+      maxFilterCount={1}
+      filterChangedHandler={(val) => dateChanged(setFilterStartDate, val)}
+    />
+  
+  const endDateFilter: JSX.Element = <AdvancedSearchFilter
+      title="End date"
+      id="endDateFilter"
+      type="date"
+      maxFilterCount={1}
+      filterChangedHandler={(val) => dateChanged(setFilterEndDate, val)}
+    />
+  
+  return <>
+    { mode !== "After" && startDateFilter }
+    { mode !== "Before" && endDateFilter }
+  </>
+}
 
 const ADV_SEARCH_QUERY = gql`
   ${MEDIA_GALLERY_FRAGMENT}
@@ -33,7 +91,7 @@ type AdvancedSearchResultsProps = {
   loading: boolean
 }
 
-const NULLDATE = new Date("0000-01-01")
+type DateFilterMode = "Between" | "Before" | "After"
 
 const AdvancedSearchResults = ({
   media,
@@ -61,8 +119,9 @@ export const AdvancedSearchQuery = () => {
   const [filterFileNames, setFilterFileNames] = useState<string[]>([])
   const [filterFaceGroups, setFilterFaceGroups] = useState<number[]>([])
   const [filterCameras, setFilterCameras] = useState<string[]>([])
-  const [filterStartDate, setFilterStartDate] = useState<Date>(NULLDATE)
-  const [filterEndDate, setFilterEndDate] = useState<Date>(NULLDATE)
+  const [filterDateSpan, setFilterDateSpan] = useState<DateFilterSpan>({startDate: undefined, endDate: undefined})
+
+  const [dateFilterMode, setDateFilterMode] = useState<DateFilterMode>("Between")
   
   /*const [searchFilters, setSearchFilters] = useState<SearchFilters>({
     albumIDs: [],
@@ -73,15 +132,13 @@ export const AdvancedSearchQuery = () => {
     endDate: undefined
   })*/
 
-  function filterChanged<T>(conv: (_: string | undefined) => T | undefined, setState: Dispatch<SetStateAction<T[]>>, newValues: (string | undefined)[]): void {
-    setState(newValues.filter(v => v && v.length > 0).map(v => conv(v)).filter(v => v !== undefined))
+  function updateDateFilter(span: DateFilterSpan) {
+    setFilterDateSpan(span)
     setSearchUpdated(false)
   }
 
-  // If date, only consider the first element as we only expect a single value
-  function dateChanged(setState: Dispatch<SetStateAction<Date>>, newVals: (string | undefined)[]) {
-    const newDateVal = newVals.length < 1 || newVals[0] === undefined || isNaN(Date.parse(newVals[0])) ? NULLDATE : new Date(newVals[0])
-    setState(newDateVal)
+  function filterChanged<T>(conv: (_: string | undefined) => T | undefined, setState: Dispatch<SetStateAction<T[]>>, newValues: (string | undefined)[]): void {
+    setState(newValues.filter(v => v && v.length > 0).map(v => conv(v)).filter(v => v !== undefined))
     setSearchUpdated(false)
   }
 
@@ -96,13 +153,12 @@ export const AdvancedSearchQuery = () => {
     console.log(filterFileNames)
     console.log(filterFaceGroups)
     console.log(filterCameras)
-    console.log(filterStartDate)
-    console.log(filterEndDate)
+    console.log(filterDateSpan)
 
     const fileNames: string[] = ['2621', '2623126']
     const albumIDs: number[] = [1]
-    const startDate: Date | undefined = new Date()
-    const endDate: Date | undefined = new Date()
+    const startDate: Date | undefined = filterDateSpan.startDate ?? new Date("0000-01-01") // Temporary, send a "null date" instead of null/undefined, otherwise GQL crashes
+    const endDate: Date | undefined = filterDateSpan.endDate ?? new Date("0000-01-01") // Temporary, send a "null date" instead of null/undefined, otherwise GQL crashes
     
     fetchSearches({ variables: { fileNames: fileNames, albumIDs: albumIDs, startDate: startDate, endDate: endDate } })
     setSearchUpdated(true)
@@ -110,7 +166,7 @@ export const AdvancedSearchQuery = () => {
 
   return (
     <div>
-      <div className="mb-10 flex flex-col gap-4">
+      <div className="mb-10 flex flex-col gap-6">
         <AdvancedSearchFilter
           title="Album"
           id="albumFilters"
@@ -139,22 +195,21 @@ export const AdvancedSearchQuery = () => {
           filterChangedHandler={(val) => filterChanged(v => v, setFilterCameras, val)}
         />
 
-        <AdvancedSearchFilter
-          title="Start date"
-          id="startDateFilter"
-          type="date"
-          maxFilterCount={1}
-          filterChangedHandler={(val) => dateChanged(setFilterStartDate, val)}
-        />
+        <div className='flex flex-col gap-4 border-2 border-black p-2'>
+          <h1>Date filter</h1>
+          <div className='flex'>
+            <Button disabled={dateFilterMode === "Between"} onClick={() => setDateFilterMode("Between")}>{t('advanced_search.date_modes.between', 'Between')}</Button>
+            <Button disabled={dateFilterMode === "Before"} onClick={() => setDateFilterMode("Before")}>{t('advanced_search.date_modes.before', 'Before')}</Button>
+            <Button disabled={dateFilterMode === "After"} onClick={() => setDateFilterMode("After")}>{t('advanced_search.date_modes.after', 'After')}</Button>
+          </div>
 
-        <AdvancedSearchFilter
-          title="End date"
-          id="endDateFilter"
-          type="date"
-          maxFilterCount={1}
-          filterChangedHandler={(val) => dateChanged(setFilterEndDate, val)}
-        />
+          <DateFilter
+            mode={dateFilterMode}
+            updateDateFilter={updateDateFilter}
+          />
+        </div>
       </div>
+      
       <Button onClick={() => search()} disabled={searchUpdated}>
         {t('advanced_search.search', 'Search')}
       </Button>
