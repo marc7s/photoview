@@ -5,5 +5,5 @@ type AdvancedSearchResult {
 
 extend type Query {
   "Perform an advanced search query on the contents of the media library"
-  advancedSearch(fileNames: [String], albumIDs: [Int], startDate: Time, endDate: Time, limitMedia: Int): AdvancedSearchResult!
+  advancedSearch(fileNames: [String], albumIDs: [String], startDate: Time, endDate: Time, limitMedia: Int): AdvancedSearchResult!
 }

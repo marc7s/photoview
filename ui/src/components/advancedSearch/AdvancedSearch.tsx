@@ -6,6 +6,8 @@ import SearchGallery from '../searchGallery/SearchGallery'
 import { MEDIA_GALLERY_FRAGMENT } from '../photoGallery/MediaGallery'
 import { Button } from '../../primitives/form/Input'
 import { advancedSearchQuery, advancedSearchQuery_advancedSearch_media } from './__generated__/advancedSearchQuery'
+import { SearchableDropdown } from './SearchableDropdown'
+import { searchQuery_search_albums } from '../header/__generated__/searchQuery'
 
 /*interface SearchFilters {
   albumIDs: string[]
@@ -115,13 +117,44 @@ export const AdvancedSearchQuery = () => {
     useLazyQuery<advancedSearchQuery>(ADV_SEARCH_QUERY)
   const [searchUpdated, setSearchUpdated] = useState<boolean>(false)
   
-  const [filterAlbums, setFilterAlbums] = useState<number[]>([])
+  const [filterAlbums, setFilterAlbums] = useState<searchQuery_search_albums[]>([])
   const [filterFileNames, setFilterFileNames] = useState<string[]>([])
   const [filterFaceGroups, setFilterFaceGroups] = useState<number[]>([])
   const [filterCameras, setFilterCameras] = useState<string[]>([])
   const [filterDateSpan, setFilterDateSpan] = useState<DateFilterSpan>({startDate: undefined, endDate: undefined})
 
   const [dateFilterMode, setDateFilterMode] = useState<DateFilterMode>("Between")
+
+  const albumSearchQuery = gql`
+  query albumSearchQuery($query: String!) {
+    search(query: $query) {
+      query
+      albums {
+        id
+        title
+        thumbnail {
+          thumbnail {
+            url
+          }
+        }
+      }
+    }
+  }
+`
+
+  const [selectedAlbum, setSelectedAlbum] = useState<searchQuery_search_albums | null>(null)
+
+  useEffect(() => {
+    if (selectedAlbum === null || filterAlbums.find(album => album.id === selectedAlbum.id) !== undefined)
+      return
+
+    setFilterAlbums([...filterAlbums, selectedAlbum])
+    setSelectedAlbum(null)
+  }, [selectedAlbum])
+
+  function removeFilterAlbum(album: searchQuery_search_albums) {
+    setFilterAlbums(filterAlbums.filter(fa => fa.id !== album.id))
+  }
   
   /*const [searchFilters, setSearchFilters] = useState<SearchFilters>({
     albumIDs: [],
@@ -156,7 +189,7 @@ export const AdvancedSearchQuery = () => {
     console.log(filterDateSpan)
 
     const fileNames: string[] = ['2621', '2623126']
-    const albumIDs: number[] = [1]
+    const albumIDs: string[] = filterAlbums.map(al => al.id)
     const startDate: Date | undefined = filterDateSpan.startDate ?? new Date("0000-01-01") // Temporary, send a "null date" instead of null/undefined, otherwise GQL crashes
     const endDate: Date | undefined = filterDateSpan.endDate ?? new Date("0000-01-01") // Temporary, send a "null date" instead of null/undefined, otherwise GQL crashes
     
@@ -167,12 +200,14 @@ export const AdvancedSearchQuery = () => {
   return (
     <div>
       <div className="mb-10 flex flex-col gap-6">
-        <AdvancedSearchFilter
-          title="Album"
-          id="albumFilters"
-          type="number"
-          filterChangedHandler={(val) => filterChanged(intConv, setFilterAlbums, val)}
-        />
+        <SearchableDropdown searchQuery={albumSearchQuery} setSelectedResult={setSelectedAlbum} clearOnSelection={true} />
+
+        {
+          filterAlbums.map(album => <div key={album.id}>
+            <span>{ album.title }</span>
+            <Button onClick={() => removeFilterAlbum(album)}>-</Button>
+          </div>)
+        }
         
         <AdvancedSearchFilter
           title="File name"

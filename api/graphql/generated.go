@@ -196,7 +196,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		AdvancedSearch             func(childComplexity int, fileNames []*string, albumIDs []*int, startDate *time.Time, endDate *time.Time, limitMedia *int) int
+		AdvancedSearch             func(childComplexity int, fileNames []*string, albumIDs []*string, startDate *time.Time, endDate *time.Time, limitMedia *int) int
 		Album                      func(childComplexity int, id int, tokenCredentials *models.ShareTokenCredentials) int
 		FaceGroup                  func(childComplexity int, id int) int
 		MapboxToken                func(childComplexity int) int
@@ -346,7 +346,7 @@ type MutationResolver interface {
 	ChangeUserPreferences(ctx context.Context, language *string) (*models.UserPreferences, error)
 }
 type QueryResolver interface {
-	AdvancedSearch(ctx context.Context, fileNames []*string, albumIDs []*int, startDate *time.Time, endDate *time.Time, limitMedia *int) (*models.AdvancedSearchResult, error)
+	AdvancedSearch(ctx context.Context, fileNames []*string, albumIDs []*string, startDate *time.Time, endDate *time.Time, limitMedia *int) (*models.AdvancedSearchResult, error)
 	MyAlbums(ctx context.Context, order *models.Ordering, paginate *models.Pagination, onlyRoot *bool, showEmpty *bool, onlyWithFavorites *bool) ([]*models.Album, error)
 	Album(ctx context.Context, id int, tokenCredentials *models.ShareTokenCredentials) (*models.Album, error)
 	MyFaceGroups(ctx context.Context, paginate *models.Pagination) ([]*models.FaceGroup, error)
@@ -1217,7 +1217,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.AdvancedSearch(childComplexity, args["fileNames"].([]*string), args["albumIDs"].([]*int), args["startDate"].(*time.Time), args["endDate"].(*time.Time), args["limitMedia"].(*int)), true
+		return e.complexity.Query.AdvancedSearch(childComplexity, args["fileNames"].([]*string), args["albumIDs"].([]*string), args["startDate"].(*time.Time), args["endDate"].(*time.Time), args["limitMedia"].(*int)), true
 
 	case "Query.album":
 		if e.complexity.Query.Album == nil {
@@ -3155,18 +3155,18 @@ func (ec *executionContext) field_Query_advancedSearch_argsFileNames(
 func (ec *executionContext) field_Query_advancedSearch_argsAlbumIDs(
 	ctx context.Context,
 	rawArgs map[string]any,
-) ([]*int, error) {
+) ([]*string, error) {
 	if _, ok := rawArgs["albumIDs"]; !ok {
-		var zeroVal []*int
+		var zeroVal []*string
 		return zeroVal, nil
 	}
 
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("albumIDs"))
 	if tmp, ok := rawArgs["albumIDs"]; ok {
-		return ec.unmarshalOInt2ᚕᚖint(ctx, tmp)
+		return ec.unmarshalOString2ᚕᚖstring(ctx, tmp)
 	}
 
-	var zeroVal []*int
+	var zeroVal []*string
 	return zeroVal, nil
 }
 
@@ -9653,7 +9653,7 @@ func (ec *executionContext) _Query_advancedSearch(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().AdvancedSearch(rctx, fc.Args["fileNames"].([]*string), fc.Args["albumIDs"].([]*int), fc.Args["startDate"].(*time.Time), fc.Args["endDate"].(*time.Time), fc.Args["limitMedia"].(*int))
+		return ec.resolvers.Query().AdvancedSearch(rctx, fc.Args["fileNames"].([]*string), fc.Args["albumIDs"].([]*string), fc.Args["startDate"].(*time.Time), fc.Args["endDate"].(*time.Time), fc.Args["limitMedia"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -19121,38 +19121,6 @@ func (ec *executionContext) marshalOFloat2ᚖfloat64(ctx context.Context, sel as
 	}
 	res := graphql.MarshalFloatContext(*v)
 	return graphql.WrapContextMarshaler(ctx, res)
-}
-
-func (ec *executionContext) unmarshalOInt2ᚕᚖint(ctx context.Context, v any) ([]*int, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]*int, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalOInt2ᚖint(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) marshalOInt2ᚕᚖint(ctx context.Context, sel ast.SelectionSet, v []*int) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	for i := range v {
-		ret[i] = ec.marshalOInt2ᚖint(ctx, sel, v[i])
-	}
-
-	return ret
 }
 
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v any) (*int, error) {

@@ -14,7 +14,7 @@ import (
 )
 
 // Search is the resolver for the search field.
-func (r *queryResolver) AdvancedSearch(ctx context.Context, fileNames []*string, albumIDs []*int, startDate *time.Time, endDate *time.Time, limitMedia *int) (*models.AdvancedSearchResult, error) {
+func (r *queryResolver) AdvancedSearch(ctx context.Context, fileNames []*string, albumIDs []*string, startDate *time.Time, endDate *time.Time, limitMedia *int) (*models.AdvancedSearchResult, error) {
 	user := auth.UserFromContext(ctx)
 	if user == nil {
 		return nil, auth.ErrUnauthorized

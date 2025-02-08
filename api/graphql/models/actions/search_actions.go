@@ -86,7 +86,7 @@ func prt(msg string) {
 	f.WriteString(msg + "\r\n")
 }
 
-func AdvancedSearch(db *gorm.DB, fileNames []*string, albumIDs []*int, startDate *time.Time, endDate *time.Time, userID int, limitMedia *int) (*models.AdvancedSearchResult, error) {
+func AdvancedSearch(db *gorm.DB, fileNames []*string, albumIDs []*string, startDate *time.Time, endDate *time.Time, userID int, limitMedia *int) (*models.AdvancedSearchResult, error) {
 	limitMediaInternal := 50
 
 	if limitMedia != nil {
